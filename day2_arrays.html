@@ -11,23 +11,20 @@
 <body>
     <script>
         function move(field, turn, x,y){
-            field[y-1][x-1] = turn;
+            if(field[y-1][x-1] == " ")
+                field[y-1][x-1] = turn;
             return field;
         }
 
-        function check(field) {
+        function check(field, turn) {
 
             // Check rows
             for(let i=0; i<3; i++){
-                let hasX = field[i].includes("X"),
-                hasO = field[i].includes("O"),
-                hasS = field[i].includes(" ");
-             if(hasS || (hasX && hasO)){
-                // return false;
-             }  else {
-                 return true;
-             }
+                
+                if(field[i].every(item=>{ return item == turn}))
+                    return true;
             }
+
 
             // Check cols
             for(let i=0; i<3; i++){
@@ -35,28 +32,16 @@
                 for(let j=0; j<3; j++){
                     col.push(field[j][i]);
                 }
-                let hasX = col.includes("X"),
-                hasO = col.includes("O"),
-                hasS = col.includes(" ")
-                if(hasS || (hasX && hasO)){
-                    // return false;
-                }  else {
+                if(col.every(item=>{ return item == turn}))
                     return true;
-                }
 
             }
             
             // Check diag
             let diag = [ [field[0][0],field[1][1],field[2][2]],[field[0][2],field[1][1],field[2][0]] ];
             for(let i=0; i<2; i++){
-                let hasX = diag[i].includes("X"),
-                hasO = diag[i].includes("O"),
-                hasS = diag[i].includes(" ")
-                if(hasS || (hasX && hasO)){
-                    // return false;
-                }  else {
+                if(diag[i].every(item=>{ return item == turn}))
                     return true;
-                }
             }
             return false;
         }
@@ -81,6 +66,8 @@
         function main() {
             let gameArray = [ [" "," "," "],[" "," "," "],[" "," "," "] ];
             let turn = "X";
+
+            printField(gameArray);
             for(;;){
 
                 let x = prompt(`(${turn} turn) Enter x pos.: `);
@@ -88,9 +75,9 @@
                 
                 gameArray = move(gameArray, turn, x, y);          
 
-                if(check(gameArray) == true){
+                if(check(gameArray, turn)){
                     printField(gameArray)
-                    console.log(turn, " win.");
+                    alert(`${turn} win.`);
                     break;
                 }
 
