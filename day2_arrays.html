@@ -1,0 +1,107 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        function move(field, turn, x,y){
+            field[y-1][x-1] = turn;
+            return field;
+        }
+
+        function check(field) {
+
+            // Check rows
+            for(let i=0; i<3; i++){
+                let hasX = field[i].includes("X"),
+                hasO = field[i].includes("O"),
+                hasS = field[i].includes(" ");
+             if(hasS || (hasX && hasO)){
+                // return false;
+             }  else {
+                 return true;
+             }
+            }
+
+            // Check cols
+            for(let i=0; i<3; i++){
+                let col = [];
+                for(let j=0; j<3; j++){
+                    col.push(field[j][i]);
+                }
+                let hasX = col.includes("X"),
+                hasO = col.includes("O"),
+                hasS = col.includes(" ")
+                if(hasS || (hasX && hasO)){
+                    // return false;
+                }  else {
+                    return true;
+                }
+
+            }
+            
+            // Check diag
+            let diag = [ [field[0][0],field[1][1],field[2][2]],[field[0][2],field[1][1],field[2][0]] ];
+            for(let i=0; i<2; i++){
+                let hasX = diag[i].includes("X"),
+                hasO = diag[i].includes("O"),
+                hasS = diag[i].includes(" ")
+                if(hasS || (hasX && hasO)){
+                    // return false;
+                }  else {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        function printField(field){
+            console.log('\n\n\n\n\n');
+            for(let i=0; i<3; i++){
+                let row = "";
+                
+                for(let j=0; j<3; j++){
+                    let symbol = field[i][j] === " " ? " " : field[i][j] ; 
+                    row += `${symbol}|`;
+                }
+
+                console.log(row.slice(0,row.length-1));
+                if(i != 2){ console.log("====="); }
+            }
+        }
+
+    </script>
+    <script>
+        function main() {
+            let gameArray = [ [" "," "," "],[" "," "," "],[" "," "," "] ];
+            let turn = "X";
+            for(;;){
+
+                let x = prompt(`(${turn} turn) Enter x pos.: `);
+                let y = prompt(`(${turn} turn) Enter y pos.: `);
+                
+                gameArray = move(gameArray, turn, x, y);          
+
+                if(check(gameArray) == true){
+                    printField(gameArray)
+                    console.log(turn, " win.");
+                    break;
+                }
+
+                turn == "X" ? turn = "O" : turn = "X"; 
+                
+                printField(gameArray);
+                console.log(check(gameArray));
+            }
+        }
+        main();
+    </script>
+</body>
+</html>
+
